@@ -8,10 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class VehicleDao {
 
     private final DataManager dataManager;
+    private final Scanner scan = new Scanner(System.in);
+
 
     public VehicleDao(DataManager dataManager) {
         this.dataManager = dataManager;
@@ -230,4 +233,93 @@ public class VehicleDao {
         }
         return vehicles;
     }
+
+    public void processAddVehicleRequest() {
+        System.out.print("Enter VIN: ");
+        int vin = scan.nextInt();
+        scan.nextLine();
+
+        System.out.print("Enter make: ");
+        String make = scan.nextLine();
+
+        System.out.print("Enter model: ");
+        String model = scan.nextLine();
+
+        System.out.print("Enter color: ");
+        String color = scan.nextLine();
+
+        System.out.print("Enter price: ");
+        double price = scan.nextDouble();
+        scan.nextLine();
+
+        System.out.print("Enter year: ");
+        int year = scan.nextInt();
+        scan.nextLine();
+
+        System.out.print("Enter vehicle type (electric/car/truck/SUV/van): ");
+        String vehicleType = scan.nextLine();
+
+        System.out.print("Enter mileage: ");
+        int mileage = scan.nextInt();
+        scan.nextLine();
+
+        String query = "INSERT INTO vehicles " +
+                "(vin, make, model, color, sold, price, year, vehicle_type, mileage) " +
+                "VALUES (?, ?, ?, ?, 'no', ?, ?, ?, ?)";
+
+        try {
+            Connection connection = dataManager.getConnection();
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+
+                statement.setInt(1, vin);
+                statement.setString(2, make);
+                statement.setString(3, model);
+                statement.setString(4, color);
+                statement.setDouble(5, price);
+                statement.setInt(6, year);
+                statement.setString(7, vehicleType);
+                statement.setInt(8, mileage);
+
+                int rows = statement.executeUpdate();
+
+                if (rows > 0) {
+                    System.out.println("Vehicle added successfully!");
+                } else {
+                    System.out.println("Vehicle insert failed.");
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println(" Error inserting vehicle: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void processRemoveVehicleRequest() {
+        System.out.print("Enter VIN of the vehicle to remove: ");
+        int vin = scan.nextInt();
+        scan.nextLine();
+
+        String query = "DELETE * FROM vehicles WHERE VIN = ? ";
+
+        try {
+            Connection connection = dataManager.getConnection();
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, vin);
+
+                int row = statement.executeUpdate();
+
+                if (row > 0) {
+                    System.out.println("Vehicle removed successfully!");
+                } else {
+                    System.out.println("Vehicle remove failed.");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error removing vehicle: " + e.getMessage());
+        }
+    }
+
 }

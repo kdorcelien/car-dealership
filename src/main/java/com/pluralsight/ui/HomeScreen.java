@@ -8,7 +8,7 @@ import com.pluralsight.util.InputValidator;
 import java.util.List;
 
 public class HomeScreen {
-private  final VehicleDao vehicleDao;
+    private final VehicleDao vehicleDao;
 
     public HomeScreen(VehicleDao vehicleDao) {
         this.vehicleDao = vehicleDao;
@@ -21,7 +21,7 @@ private  final VehicleDao vehicleDao;
             InputValidator.clearScreen();
             displayMenu();
 
-            int choice = InputValidator.getIntInRange("Select an option: ", 0, 6);
+            int choice = InputValidator.getIntInRange("Select an option: ", 0, 8);
 
             switch (choice) {
                 case 1:
@@ -42,6 +42,12 @@ private  final VehicleDao vehicleDao;
                 case 6:
                     showByType();
                     break;
+                case 7:
+                    addVehicle();
+                    break;
+                case 8:
+                    removeVehicle();
+                    break;
                 case 0:
                     running = false;
                     break;
@@ -59,11 +65,14 @@ private  final VehicleDao vehicleDao;
         System.out.println("4. By color");
         System.out.println("5. By mileage range");
         System.out.println("6. By type");
+        System.out.println("7. Add Vehicle");
+        System.out.println("8. Remove Vehicle");
 
         System.out.println("\n0. Back to main menu");
         System.out.println();
     }
-    public void showByPriceRange(){
+
+    private void showByPriceRange() {
         InputValidator.clearScreen();
         ConsoleColors.printHeader("by Price Range");
 
@@ -73,7 +82,7 @@ private  final VehicleDao vehicleDao;
         printResults(vehicles);
     }
 
-    public void showByByMakeModel(){
+    private void showByByMakeModel() {
         InputValidator.clearScreen();
         ConsoleColors.printHeader("by Make and Model");
 
@@ -83,7 +92,7 @@ private  final VehicleDao vehicleDao;
         printResults(vehicles);
     }
 
-    public void showByYearRange(){
+    private void showByYearRange() {
         InputValidator.clearScreen();
         ConsoleColors.printHeader("by Year Range");
 
@@ -93,7 +102,7 @@ private  final VehicleDao vehicleDao;
         printResults(vehicles);
     }
 
-    public void showByColor(){
+    private void showByColor() {
         InputValidator.clearScreen();
         ConsoleColors.printHeader("by Color");
 
@@ -102,7 +111,7 @@ private  final VehicleDao vehicleDao;
         printResults(vehicles);
     }
 
-    public void showByMileageRange(){
+    private void showByMileageRange() {
         InputValidator.clearScreen();
         ConsoleColors.printHeader("by Mileage Range");
 
@@ -112,7 +121,7 @@ private  final VehicleDao vehicleDao;
         printResults(vehicles);
     }
 
-    public void showByType(){
+    private void showByType() {
         InputValidator.clearScreen();
         ConsoleColors.printHeader("by Type");
 
@@ -120,6 +129,7 @@ private  final VehicleDao vehicleDao;
         List<Vehicle> vehicles = vehicleDao.searchByType(type);
         printResults(vehicles);
     }
+
     private void printResults(List<Vehicle> vehicles) {
         InputValidator.clearScreen();
 
@@ -146,5 +156,27 @@ private  final VehicleDao vehicleDao;
             InputValidator.pressEnterToContinue();
         }
     }
+
+    private void addVehicle() {
+        InputValidator.clearScreen();
+        ConsoleColors.printHeader("Add a New Vehicle");
+
+        vehicleDao.processAddVehicleRequest();
+
+        System.out.println();
+        InputValidator.pressEnterToContinue();
+    }
+
+    private void removeVehicle() {
+        InputValidator.clearScreen();
+        ConsoleColors.printHeader("Remove a Vehicle");
+
+        vehicleDao.processRemoveVehicleRequest();
+
+        System.out.println();
+        InputValidator.pressEnterToContinue();
+    }
+
+
 }
 
